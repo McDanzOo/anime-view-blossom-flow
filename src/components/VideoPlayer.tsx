@@ -1,7 +1,6 @@
-
 import React, { useState, useRef, useEffect } from 'react';
 import { useSettings } from '@/services/animeApi';
-import { Play, Pause, VolumeX, Volume2, Maximize, SkipForward, Settings } from 'lucide-react';
+import { Play, Pause, VolumeX, Volume2, Maximize, SkipForward, Settings, Download } from 'lucide-react';
 import { Slider } from '@/components/ui/slider';
 import { Button } from '@/components/ui/button';
 import { 
@@ -13,6 +12,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 import { Episode, VideoQuality } from '@/types/anime';
+import { toast } from '@/hooks/use-toast';
 
 interface VideoPlayerProps {
   episode: Episode;
@@ -30,6 +30,7 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ episode, onNextEpisode }) => 
   const [controlsVisible, setControlsVisible] = useState(true);
   const [selectedQuality, setSelectedQuality] = useState<VideoQuality>(settings.preferredQuality);
   const [hideControlsTimeout, setHideControlsTimeout] = useState<NodeJS.Timeout | null>(null);
+  const [downloading, setDownloading] = useState(false);
   
   const videoRef = useRef<HTMLVideoElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -154,6 +155,43 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ episode, onNextEpisode }) => 
     setHideControlsTimeout(timeout);
   };
 
+  const handleDownload = async () => {
+    try {
+      setDownloading(true);
+      const response = await fetch(selectedSource.url);
+      const blob = await response.blob();
+      
+      // Create a temporary link to download the file
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      
+      // Create filename from anime episode details
+      const fileName = `episode_${episode.number}${episode.title ? `_${episode.title}` : ''}_${selectedQuality}.mp4`;
+      link.setAttribute('download', fileName);
+      
+      // Trigger download and clean up
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+      
+      toast({
+        title: "Загрузка началась",
+        description: `Эпизод ${episode.number} будет сохранен на ваше устройство`,
+      });
+    } catch (error) {
+      console.error('Download failed:', error);
+      toast({
+        variant: "destructive",
+        title: "Ошибка загрузки",
+        description: "Не удалось скачать видео. Пожалуйста, попробуйте еще раз.",
+      });
+    } finally {
+      setDownloading(false);
+    }
+  };
+
   return (
     <div 
       ref={containerRef}
@@ -266,6 +304,16 @@ const VideoPlayer: React.FC<VideoPlayerProps> = ({ episode, onNextEpisode }) => 
             </div>
             
             <div className="flex items-center space-x-2">
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-white hover:bg-white/20"
+                onClick={handleDownload}
+                disabled={downloading}
+              >
+                <Download className="h-5 w-5" />
+              </Button>
+              
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button

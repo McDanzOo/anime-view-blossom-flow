@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Search, Heart, Settings, Home } from 'lucide-react';
@@ -31,7 +30,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
       <div className="container mx-auto px-4 h-16 flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <Link to="/" className="flex items-center space-x-2">
-            <span className="text-2xl font-bold text-gradient">АнимеВью</span>
+            <span className="text-2xl font-bold text-gradient">AniRus</span>
           </Link>
         </div>
 
@@ -52,7 +51,7 @@ const Header: React.FC<HeaderProps> = ({ onSearch }) => {
             <Search className="h-4 w-4" />
           </Button>
         </form>
-
+        
         <div className="flex items-center space-x-1">
           <Button
             variant="ghost"

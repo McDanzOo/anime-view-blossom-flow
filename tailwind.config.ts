@@ -67,8 +67,8 @@ export default {
 					primary: '#8B5CF6', // Purple
 					secondary: '#EC4899', // Pink
 					accent: '#F43F5E', // Red-Pink
-					dark: '#0F172A', // Very dark blue
-					card: '#1E293B', // Dark blue-gray
+					dark: '#222222', // Very dark gray (changed from dark blue)
+					card: '#333333', // Dark gray (changed from dark blue-gray)
 					light: '#E2E8F0' // Light gray
 				}
 			},
