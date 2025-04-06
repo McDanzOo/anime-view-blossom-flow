@@ -1,0 +1,25 @@
+
+{
+  "appId": "com.anirus.app",
+  "productName": "AniRus",
+  "directories": {
+    "output": "build"
+  },
+  "files": [
+    "dist/**/*",
+    "electron.js",
+    "preload.js"
+  ],
+  "win": {
+    "target": "nsis",
+    "icon": "public/favicon.ico"
+  },
+  "mac": {
+    "target": "dmg",
+    "icon": "public/favicon.ico"
+  },
+  "linux": {
+    "target": "AppImage",
+    "icon": "public/favicon.ico"
+  }
+}
